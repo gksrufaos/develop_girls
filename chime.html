@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>chime</title>
+	<script src="jquery-1.11.0.min.js"></script>
+</head>
+<body>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+		.chime__item {
+			margin: 100px 0;
+		}
+		.chime__title {
+			font-size: 50px;
+			text-align: center;
+		}
+		.chime__fuselage {
+			display: block;
+			width: 10px;
+			height: 100px;
+			margin: 0 auto;
+			background-color: blue;
+			transform-origin: top center;
+		}
+		/* 계속 달랑 달랑 */
+		.chime__fuselage.-continue {
+			animation: -continue .8s ease-in-out alternate infinite;
+		}
+		@keyframes -continue {
+			0%		{transform: rotate(45deg);}
+			100%	{transform: rotate(-45deg);}
+		}
+		/* 달랑 달랑하다가 스르륵 + 일정 스크롤 위치에서 재 실행 */
+		.chime__fuselage.-scroll {
+			animation: -scroll 1s ease-in-out forwards;
+		}
+		@keyframes -scroll {
+			0%		{transform: rotate(45deg);}
+			15%		{transform: rotate(-45deg);}
+			30%		{transform: rotate(22.5deg);}
+			45%		{transform: rotate(-22.5deg);}
+			60%		{transform: rotate(11.25deg);}
+			70%		{transform: rotate(-11.25deg);}
+			80%		{transform: rotate(5.625deg);}
+			90%		{transform: rotate(-5.625deg);}
+			100%	{transform: rotate(0deg);}
+		}
+		/* 달랑 달랑하다가 스르륵 + 일정 시간을간격으로 반복 */
+		.chime__fuselage.-repeat {
+			animation: -repeat 1s ease-in-out forwards;
+		}
+		@keyframes -repeat {
+			0%		{transform: rotate(45deg);}
+			15%		{transform: rotate(-45deg);}
+			30%		{transform: rotate(22.5deg);}
+			45%		{transform: rotate(-22.5deg);}
+			60%		{transform: rotate(11.25deg);}
+			70%		{transform: rotate(-11.25deg);}
+			80%		{transform: rotate(5.625deg);}
+			90%		{transform: rotate(-5.625deg);}
+			100%	{transform: rotate(0deg);}
+		}
+	</style>
+	<script>
+		$(document).ready(function(){
+			// 달랑 달랑하다가 스르륵 + 일정 스크롤 위치에서 재 실행
+			var scrollChime = $('.chime__item').eq(1).find('.chime__fuselage'),
+				repeatChime = $('.chime__item').eq(2).find('.chime__fuselage');
+			scrollChime.addClass('-scroll');
+			$(window).scroll(function(){
+				var scrolling = $(window).scrollTop(),
+					basePoint = $('.base-point').offset().top;
+				if ( scrolling > basePoint ) {
+					scrollChime.removeClass('-scroll');
+					$(window).scroll(function(){
+						scrolling = $(window).scrollTop();
+						if ( scrolling < basePoint) scrollChime.addClass('-scroll');
+					});
+				};
+			});
+			// 달랑 달랑하다가 스르륵 + 일정 시간을간격으로 반복
+			repeatChime.toggleClass('-repeat');
+			setInterval(function(){
+				repeatChime.toggleClass('-repeat');
+			}, 2000);
+		});
+	</script>
+	<div class="chime">
+		<ul class="chime__list">
+			<li class="chime__item">
+				<h1 class="chime__title">계속 달랑 달랑</h1>
+				<i class="chime__fuselage -continue"></i>
+			</li>
+			<li class="chime__item">
+				<h1 class="chime__title">달랑 달랑하다가 스르륵 + 일정 스크롤 위치에서 재 실행</h1>
+				<i class="chime__fuselage"></i>
+			</li>
+			<li class="chime__item">
+				<h1 class="chime__title">달랑 달랑하다가 스르륵 + 일정 시간을간격으로 반복</h1>
+				<i class="chime__fuselage"></i>
+			</li>
+		</ul>
+	</div>
+	<div class="base-point" style="height: 1200px; background-color: blue;"></div>
+</body>
+</html>
